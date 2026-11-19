@@ -1,4 +1,4 @@
-# File: server.py - VERSI DEPLOY FINAL, BUAT RENDER / RAILWAY
+# File: server.py - VERSI KOYEB FINAL, ONLINE 24 JAM, FULL YOUTUBE
 import os
 import yt_dlp
 from flask import Flask, jsonify, request
@@ -15,7 +15,6 @@ def get_audio_url(video_id):
         "no_warnings": True,
         "noplaylist": True,
         "extract_flat": False,
-        # Ini penting biar gak diblokir YouTube di server Render
         "user_agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -25,6 +24,10 @@ def get_audio_url(video_id):
 @app.route("/")
 def home():
     return jsonify({"status": "VIBRALYS ONLINE!", "message": "Server hidup, siap ngasih lagu FULL"})
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok"})
 
 @app.route("/search")
 def search():
@@ -80,6 +83,7 @@ def audio(video_id):
         return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
+    # KOYEB ngasih PORT lewat env, jangan di-hardcode 5000
+    port = int(os.environ.get("PORT", 8000))
     print(f"Server VIBRALYS jalan di port {port}")
     app.run(host="0.0.0.0", port=port)
